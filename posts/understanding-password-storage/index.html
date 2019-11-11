@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Abhinav Jha">
+    <meta name="description" content="Curious Programmer">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Storing passwords securely"/>
+<meta name="twitter:description" content="We regularly see a lot of cases of passwords being stolen from different organizations. Not even large companies like Facebook or Twitter are secure against password theft. While the security breaches have become common, companies have started focusing on security. One of the prime security concerns is the storage of sensitive data along with user information. In this post, I&rsquo;ll go through different ways an organization can store passwords along with risks related to it."/>
+
+    <meta property="og:title" content="Storing passwords securely" />
+<meta property="og:description" content="We regularly see a lot of cases of passwords being stolen from different organizations. Not even large companies like Facebook or Twitter are secure against password theft. While the security breaches have become common, companies have started focusing on security. One of the prime security concerns is the storage of sensitive data along with user information. In this post, I&rsquo;ll go through different ways an organization can store passwords along with risks related to it." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://ajaxisme.github.io/posts/understanding-password-storage/" />
+<meta property="article:published_time" content="2019-04-03T23:52:39-04:00"/>
+<meta property="article:modified_time" content="2019-04-03T23:52:39-04:00"/>
+
+
+    
+      <base href="https://ajaxisme.github.io/posts/understanding-password-storage/">
+    
+    <title>
+  Storing passwords securely · Abhinav Jha
+</title>
+
+    
+      <link rel="canonical" href="https://ajaxisme.github.io/posts/understanding-password-storage/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" integrity="sha256-oSrCnRYXvHG31SBifqP2PM1uje7SJUyX0nTwO2RJV54=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://ajaxisme.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://ajaxisme.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://ajaxisme.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.54.0" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://ajaxisme.github.io">
+      Abhinav Jha
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://ajaxisme.github.io/posts/">Blog</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://ajaxisme.github.io/about/">About</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Storing passwords securely</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2019-04-03T23:52:39-04:00'>
+                April 3, 2019
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              2 minutes read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://ajaxisme.github.io/tags/security/">security</a>
+      <span class="separator">•</span>
+    <a href="https://ajaxisme.github.io/tags/cryptography/">cryptography</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+
+<p>We regularly see a lot of cases of passwords being stolen from different organizations. Not even large companies like <a href="https://thenextweb.com/facebook/2019/04/03/facebook-amazon-third-party-data-leak-again/">Facebook</a> or <a href="https://www.theverge.com/2018/5/3/17316684/twitter-password-bug-security-flaw-exposed-change-now">Twitter</a> are secure against password theft. While the security breaches have become common, companies have started focusing on security. One of the prime security concerns is the storage of sensitive data along with user information. In this post, I&rsquo;ll go through different ways an organization can store passwords along with risks related to it. It does make sense to understand how these storage mechanisms make a password secure.</p>
+
+<h4 id="plaintext">Plaintext</h4>
+
+<p>The simplest way to store a password is to keep in plaintext. The server has a file or database table keeping the passwords as entered by the user.</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4">username password
+-------- ---------
+steven   pass123 
+george   too_easy </pre></div>
+<p>Once the hacker gets hold of the password file, he doesnt need any more work to impersonate the account holder.</p>
+
+<h4 id="cryptographic-hash">Cryptographic hash</h4>
+
+<p>A cryptographic hash is a unique encoded string for every unique input. The hash function is an irreversible function which means it is easy to calculate a hash for a password string, but given a password hash, it is impossible(takes infeasibly long time) to get the password string from it. The property of uniqueness is of prime importance when using them to store passwords. Ideally, no two passwords should resolve to same hash string. This is called collision in cryptographic terms. There are many algorithms that have developed by cryptographers to avoid collisions or reduce them to a very negligible probability. Examples include SHA-1, SHA-256. MD5 is another popular algorithm which is considered broken and not suitable for password storage.</p>
+
+<p>For simplicity, we will convert a password string to its corresponding SHA-1 hash using Python3 and store it</p>
+<div class="highlight"><pre style="color:#e5e5e5;background-color:#000;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&gt;&gt;&gt; import hashlib
+&gt;&gt;&gt; hashed_password = hashlib.sha1(b&#39;mysecurepassword&#39;).hexdigest()
+&gt;&gt;&gt; hashed_password
+&#39;f5784f535e6f5b0b5473d387262a0250cc45b736&#39;
+&gt;&gt;&gt; slight_changed_hashed_password = hashlib.sha1(b&#39;mysecurepasswor&#39;).hexdigest()
+&gt;&gt;&gt; slight_changed_hashed_password
+&#39;3b9d355aa510d3b76e763b57abe6a688b0afcf51&#39;</pre></div>
+<p>We see <code>f5784f535e6f5b0b5473d387262a0250cc45b736</code> is the cryptographic hash for <code>mysecurepassword</code>. This is stored in the password file. Once the hacker gets hold of the password file, all he can see now is the a string of random characters. It is almost impossible for him to get back original password back. He has try all possible combinations of string and compare there hashes with the one above till it matches. This is called brute-force attack and it takes years for him to test all the passwords. Even a small change like changing a single letter in our original password gives an entiirely unrelated hash. This makes it much more secure than storing it as plaintext.</p>
+
+<p><strong>Problems</strong></p>
+
+<h4 id="cryptographic-hash-with-salt">Cryptographic hash with salt</h4>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+     © 2019
+    
+       · 
+      Powered by <a href="https://gohugo.io/">Hugo</a> & <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+
+  </body>
+
+</html>
